@@ -8,7 +8,7 @@ import time
 import ctypes
 
 class altimeter:
-	def __init__(self, QNH, unit = 'm'):
+	def __init__(self, QNH = 1005, unit = 'm'):
 		self.qnh = QNH / 10
 		if unit == 'm':
 			self.unit = True
