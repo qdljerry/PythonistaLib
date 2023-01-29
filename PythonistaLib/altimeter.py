@@ -2,18 +2,16 @@
 # 2022/8
 # The standard unit is meter(m) or feet(ft)
 # The unit of QNH is hPa
+# WARNING: This library only work when MSL under 11km
 
 from objc_util import ObjCInstance, ObjCClass, ObjCBlock, c_void_p
 import time
 import ctypes
 
 class altimeter:
-	def __init__(self, QNH = 1005, unit = 'm'):
+	def __init__(self, QNH = 1013.25, unit = 'm'):
 		self.qnh = QNH / 10
-		if unit == 'm':
-			self.unit = True
-		else:
-			self.unit = False
+		self.unit = unit
 	
 	def altitude(self):
 		self.flag = False
@@ -29,11 +27,13 @@ class altimeter:
 		while not self.flag:
 			pass
 		altimeter.stopRelativeAltitudeUpdates()
-		alt = 44300*(1-((self.pressure/self.qnh)**(1/5.256)))
-		if self.unit:
+		alt = (273+15)/-6.5e-3 * ((self.pressure/self.qnh)**((8.3144598*-6.5e-3)/(-9.80665*0.0289644))-1)
+		if self.unit == 'm':
 			return alt
-		else:
+		elif self.unit == 'ft':
 			return alt/0.3048
+		else:
+			return nil
 	
 	def handler(self, _cmd, _data, _error):
 		self.pressure = ObjCInstance(_data).pressure().floatValue()
