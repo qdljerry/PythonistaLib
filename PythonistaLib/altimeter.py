@@ -33,7 +33,7 @@ class altimeter:
 		elif self.unit == 'ft':
 			return alt/0.3048
 		else:
-			return nil
+			raise RuntimeError('UnSupportedUnit')
 	
 	def handler(self, _cmd, _data, _error):
 		self.pressure = ObjCInstance(_data).pressure().floatValue()
