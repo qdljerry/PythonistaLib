@@ -8,5 +8,5 @@ A set of libraries which enable extra functions in the Pythonista
   > Use the data from pressure sensor to caculate the altitude  
   > The standard unit is meter(m)
   > The optional unit is feet(ft)  
-  > `QNH` is highly recommanded to setup
-  > This model only work under MSL 11km
+  > `QNH` is highly recommanded to setup  
+  > This model only work under MSL 11km  
