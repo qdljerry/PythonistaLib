@@ -21,6 +21,9 @@ class altimeter:
 		altimeter = CMAltimeter.new()
 		main_q = NSOperationQueue.mainQueue()
 	
+	def __del__(self):
+		self.stop_update()
+	
 	def start_update(self):
 		altimeter.startRelativeAltitudeUpdatesToQueue_withHandler_(main_q, handler_block)
 	
