@@ -13,7 +13,13 @@ class altimeter:
 		self.qnh = QNH / 10
 		self.unit = unit
 	
-	def altitude(self):
+	def start_update(self):
+		pass
+	
+	def stop_update(self):
+		pass
+	
+	def get_altitude(self):
 		self.flag = False
 		handler_block = ObjCBlock(self.handler, restype=None, argtypes=[c_void_p, c_void_p, c_void_p])
 		CMAltimeter = ObjCClass('CMAltimeter')
