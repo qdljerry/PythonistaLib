@@ -12,35 +12,28 @@ class altimeter:
 	def __init__(self, QNH = 1013.25, unit = 'm'):
 		self.qnh = QNH / 10
 		self.unit = unit
-	
-	def start_update(self):
-		pass
-	
-	def stop_update(self):
-		pass
-	
-	def get_altitude(self):
-		self.flag = False
+		self.alt = None
+		self.unitDict = {'m':1.0,'ft':0.3048}
 		handler_block = ObjCBlock(self.handler, restype=None, argtypes=[c_void_p, c_void_p, c_void_p])
 		CMAltimeter = ObjCClass('CMAltimeter')
 		NSOperationQueue = ObjCClass('NSOperationQueue')
 		if not CMAltimeter.isRelativeAltitudeAvailable():
-			raise NoAltimeterAvailable
-			return -1
+			raise RuntimeError('NoAltimeterAvailable')
 		altimeter = CMAltimeter.new()
 		main_q = NSOperationQueue.mainQueue()
+	
+	def start_update(self):
 		altimeter.startRelativeAltitudeUpdatesToQueue_withHandler_(main_q, handler_block)
-		while not self.flag:
-			pass
+	
+	def stop_update(self):
 		altimeter.stopRelativeAltitudeUpdates()
-		alt = (273+15)/-6.5e-3 * ((self.pressure/self.qnh)**((8.3144598*-6.5e-3)/(-9.80665*0.0289644))-1)
-		if self.unit == 'm':
-			return alt
-		elif self.unit == 'ft':
-			return alt/0.3048
-		else:
-			raise RuntimeError('UnSupportedUnit')
+	
+	def get_altitude(self):
+		try:
+			return self.alt / self.unitDict[self.unit]
+		except:
+			raise RuntimeError('UnSupportedUnit') if self.alt != None else RuntimeError('AltimeterNotReady')
 	
 	def handler(self, _cmd, _data, _error):
 		self.pressure = ObjCInstance(_data).pressure().floatValue()
-		self.flag = True
+		self.alt = (273+15)/-6.5e-3 * ((self.pressure/self.qnh)**((8.3144598*-6.5e-3)/(-9.80665*0.0289644))-1)
