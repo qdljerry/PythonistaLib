@@ -5,7 +5,6 @@
 # WARNING: This library only work when MSL under 11km
 
 from objc_util import ObjCInstance, ObjCClass, ObjCBlock, c_void_p
-import time
 import ctypes
 
 class altimeter:
